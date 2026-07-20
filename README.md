@@ -1,131 +1,408 @@
 # SnipMatch
 
-SnipMatch compares a user's current hairstyle with a reference hairstyle and turns the visible differences into clear, barber-ready instructions. It is designed to improve haircut consultations—not to evaluate appearance or attractiveness.
+AI-powered hairstyle comparison that helps people communicate better with their barbers.
+
+SnipMatch compares a user's current hairstyle with a reference hairstyle, identifies the key differences, and transforms them into clear, professional, barber-ready instructions.
+
+Instead of judging appearance or defining what looks "better", SnipMatch focuses on one goal: helping users explain the haircut they want.
 
 ## Demo
 
-**Live Demo:** To be added after Railway deployment
+Live Demo: https://snipmatch.onrender.com/
 
 ## Project Overview
 
-A reference photo can show the look someone wants, but it rarely explains what must change in their current haircut. SnipMatch gives clients and barbers a shared technical starting point by comparing two uploaded hairstyle photos across four observable dimensions: Volume, Length, Texture, and Silhouette.
+A reference photo can show the hairstyle someone wants, but it rarely explains what needs to change from their current haircut.
 
-The result is a structured web report with evidence, confidence, adjustable priorities, and practical consultation notes. A downloadable Barber Brief turns the same analysis into an appointment-ready PDF.
+This creates a communication gap between customers and barbers. Users often know the result they want, but they struggle to describe the technical details behind that style.
+
+SnipMatch creates a shared language between customers and barbers by analyzing hairstyle differences across four observable dimensions:
+- Volume
+- Length
+- Texture
+- Silhouette
+
+The result is a structured consultation report with evidence-based observations, adjustable priorities, and practical barber instructions.
+
+Users can also generate a Barber Brief PDF to bring directly to their appointment.
 
 ## Features
 
-- Upload a current hairstyle photo and a reference hairstyle photo
-- AI-powered visual hairstyle comparison
-- Volume, Length, Texture, and Silhouette scores with confidence and evidence
-- Deterministic Overall Match Rate calculation
-- User-adjustable analysis priorities that recalculate instantly
-- Region-specific, evidence-bound barber consultation instructions
-- Optional Client Non-Negotiable with a professional translation and target-style conflict note
-- AI-estimated reference style name with confidence gating
-- Downloadable SnipMatch Barber Brief PDF
-- Normalized image inputs and analysis caching for more consistent repeat results
+### AI Hairstyle Comparison
+
+Upload your current hairstyle photo and a reference hairstyle photo. SnipMatch analyzes the differences between the two hairstyles using four key dimensions:
+- Volume
+- Length
+- Texture
+- Silhouette
+
+### Explainable Haircut Analysis
+
+Instead of providing a single black-box similarity score, SnipMatch generates structured observations with supporting evidence, helping users understand exactly what needs to change.
+
+### Personalized Match Score
+
+Users can adjust the importance of each dimension based on their personal preferences.
+
+For example:
+- Someone growing out their hair can prioritize Length.
+- Someone looking for a specific style can prioritize Texture or Silhouette.
+
+The Match Score updates instantly without requiring another AI request.
+
+### Barber-Ready Instructions
+
+SnipMatch transforms visual differences into practical haircut guidance using professional terminology that helps customers communicate more clearly with barbers.
+
+### Personal Haircut Requirements
+
+Users can provide non-negotiable preferences, such as:
+
+- Keep the hair below the ears.
+- Do not cut the fringe too short.
+- Avoid removing too much volume.
+
+SnipMatch translates these preferences into professional consultation notes and checks for potential conflicts with the target hairstyle.
+
+### Reference Style Recognition
+
+SnipMatch estimates the reference hairstyle name with confidence scoring to help users better describe their desired haircut.
+
+### Barber Brief PDF
+
+Generate a clean, downloadable PDF summary that users can bring directly to their barber appointment.
+
+### Consistent AI Analysis
+
+Input images are normalized and analysis results are cached to improve consistency and reduce unnecessary AI requests.
 
 ## AI Features
 
-SnipMatch employs a two-stage reasoning pipeline powered by **GPT-5.6** via a standardized OpenAI-compatible API endpoint. This architecture decouples the application from specific inference providers, ensuring high availability and flexibility.
+SnipMatch uses GPT-5.6-powered vision capabilities to transform hairstyle images into structured, explainable haircut guidance.
 
-- **Stage 1 (Spatial Analysis):** **GPT-5.6-sol** analyzes normalized current and reference images across eight spatial hair zones. It returns strictly structured scores, confidence levels, and spatial evidence for Volume, Length, Texture, and Silhouette.
-- **Stage 2 (Professional Synthesis):** **GPT-5.6-luna** converts only the validated Stage 1 observations into region-specific barber guidance, operating under 13 strict anti-fabrication rules to prevent hallucinations.
-- **Style Identification:** Estimates a concise reference hairstyle name and confidence score directly from the reference image.
-- **Constraint Validation:** When supplied, a separate **GPT-5.6-luna** request translates "Client Non-Negotiable" preferences into professional terminology and checks for conflicts with the target style.
+The AI workflow is designed around two stages:
 
-**Engineering Safeguards:**
-The server rigorously validates Stage 1 JSON before synthesis. The generated professional report is scanned for banned filler words, invented measurements, and unsupported techniques. The browser calculates the final weighted Overall Match Rate deterministically. Adjusting user priorities triggers a local recalculation rather than a new AI request, preserving rate limits and consistency. The optional non-negotiable serves purely as a communication overlay and is isolated from feature extraction, caching, and core scoring logic. All API keys and AI requests remain strictly server-side.
+### Stage 1: Hairstyle Analysis
+
+The vision model analyzes the current hairstyle and reference hairstyle across eight observable hair regions.
+
+It extracts structured information for four key dimensions:
+
+- Volume
+- Length
+- Texture
+- Silhouette
+
+For each dimension, the model provides:
+- score estimation
+- confidence level
+- supporting visual evidence
+
+This structured approach helps avoid relying on a single subjective similarity score.
+
+### Stage 2: Professional Barber Guidance
+
+A second AI step converts validated hairstyle observations into practical barber consultation instructions.
+
+The generated guidance focuses on:
+- what should change
+- where the change should happen
+- how to communicate the change professionally
+
+The goal is not to judge whether a hairstyle is attractive, but to help users explain their preferences more clearly.
+
+### Reference Style Recognition
+
+SnipMatch estimates a concise name for the reference hairstyle and provides a confidence score.
+
+When confidence is low, the system avoids overclaiming and uses a generic reference label instead.
+
+### Personalized Requirements
+
+Users can provide personal haircut requirements, such as keeping certain lengths or avoiding specific changes.
+
+AI translates these preferences into professional consultation language and identifies possible conflicts with the target hairstyle.
+
+### Reliability and Consistency
+
+To improve reliability, SnipMatch separates AI interpretation from application logic.
+
+The AI provides structured observations, while the application calculates the final weighted Match Score deterministically.
+
+Changing user priorities only recalculates the score locally and does not trigger another AI request.
+
+All AI requests and API keys remain strictly server-side.
+
+## Development with Codex & GPT-5.6
+
+Codex played an important role throughout the development of SnipMatch, accelerating implementation, debugging, testing, and deployment preparation.
+
+Instead of replacing product decisions, Codex helped transform ideas into a working product by assisting with engineering tasks and improving iteration speed.
+
+Key areas where Codex accelerated development:
+
+### Backend Development
+
+Codex helped build and refine the Node.js + Express backend, including:
+
+- OpenAI API integration
+- image upload handling
+- structured JSON response processing
+- server-side security practices
+- environment variable configuration
+
+### AI Workflow Design
+
+Codex helped iterate on the AI analysis pipeline, including:
+
+- designing structured hairstyle analysis outputs
+- improving prompt reliability
+- separating AI interpretation from deterministic application logic
+- reducing inconsistent AI-generated scoring
+
+### Debugging and Testing
+
+Codex assisted with:
+
+- identifying deployment issues
+- debugging API integration problems
+- improving error handling
+- validating repeated image analysis consistency
+
+### Deployment and Documentation
+
+Codex accelerated:
+
+- GitHub repository preparation
+- Render deployment configuration
+- README creation and refinement
+- security reviews before public release
+
+GPT-5.6 was used within Codex for architecture review, reasoning about AI workflow design, improving code quality, and validating the final implementation.
+
+The final product combines human product decisions with AI-assisted development to create a more reliable and user-focused experience.
 
 ## Architecture
 
+SnipMatch uses a simple full-stack architecture designed for fast iteration and reliable AI-powered analysis.
+
+The application runs as a single Node.js + Express service:
+
 ```mermaid
 flowchart LR
-    A[User Browser] --> B[Node.js Server]
-    B --> C[Static HTML, CSS, and JavaScript]
-    A -->|Two normalized hairstyle images| D[POST /api/analyze]
-    D --> E[Stage 1: GPT-5.6-sol eight-zone extraction]
-    E --> H[Validated feature cache]
-    H --> R[Stage 2: GPT-5.6-luna barber-safe report]
-    R --> J[Validated report cache]
-    J --> D
-    D --> A
-    A --> F[Deterministic weighted score]
-    A --> G[Barber Brief PDF]
-```
+    A[User Browser] --> B[SnipMatch Web App]
 
-The project intentionally uses no frontend framework, build tool, database, Docker image, or serverless layer. The built-in Node.js HTTP server serves the static frontend and the analysis endpoint from one Railway service.
+    B -->|Upload hairstyle images| C[Express Backend]
+
+    C --> D[Image Processing]
+    D --> E[GPT-5.6 Vision Analysis]
+
+    E --> F[Structured Hairstyle Data]
+
+    F --> G[Professional Barber Guidance]
+
+    F --> H[Weighted Match Score Calculation]
+
+    H --> B
+
+    G --> B
+
+    B --> I[Barber Brief PDF]
+
+### Data Flow
+
+1. Users upload:
+   - current hairstyle image
+   - reference hairstyle image
+
+2. The backend processes and normalizes the images before sending them to the AI analysis pipeline.
+
+3. GPT-5.6 analyzes observable hairstyle features and returns structured information across four dimensions:
+   - Volume
+   - Length
+   - Texture
+   - Silhouette
+
+4. The application validates the AI output and generates:
+   - hairstyle comparison insights
+   - barber-ready instructions
+   - personalized consultation notes
+
+5. The browser calculates the final weighted Match Score locally based on user-selected priorities.
+
+6. Users can export the final consultation report as a Barber Brief PDF.
+
+This architecture separates AI interpretation from application logic, allowing flexible AI analysis while maintaining consistent scoring, user control, and secure server-side API handling.
 
 ## Local Setup
 
-Requirements:​ Node.js 18+ and an OpenAI-compatible API key (supports sk-cr-xxxformat keys from compatible inference providers). 
-Quick Start:​ Run Copy-Item .env.example .env, then npm install, and npm start. 
-Configuration:​ Populate .envwith OPENAI_API_KEY=your_key_here, OPENAI_BASE_URL=https://api.crazyrouter.com/v1, VISION_MODEL=gpt-5.6-sol, REPORT_MODEL=gpt-5.6-luna, and PORT=3000. 
-Note: This setup mirrors the production Render environment to eliminate environment-specific bugs, featuring fallback logic for seamless switching between inference backends. Launch http://localhost:3000 to access the local demo.
+### Requirements
+
+- Node.js 18+
+- An OpenAI-compatible API key
+
+### Installation
+
+Clone the repository:
+
+```bash
+git clone https://github.com/your-username/SnipMatch.git
+cd SnipMatch
 
 ## Environment Variables
 
-The following environment variables configure the backend. OPENAI_API_KEY​ is required; all others are optional and defaulted. 
-- OPENAI_API_KEY: Server-side API credential (accepts OpenAI or compatible keys such as sk-cr-xxx); never expose this to browser code. 
-- OPENAI_BASE_URL: OpenAI-compatible inference endpoint; defaults to https://api.crazyrouter.com/v1. 
-- VISION_MODEL: Stage 1 spatial hair analysis model; defaults to gpt-5.6-sol. 
-- REPORT_MODEL: Stage 2 professional report and constraint validation model; defaults to gpt-5.6-luna. 
-- PORT: Listening port for the HTTP server; defaults to 3000, though Render auto-injects this value in production environments.
+The backend uses environment variables to configure AI services and server settings.
+
+| Variable | Description |
+|---|---|
+| OPENAI_API_KEY | Server-side API credential. Never expose this key to frontend code. |
+| OPENAI_BASE_URL | Optional OpenAI-compatible API endpoint configuration. |
+| VISION_MODEL | Vision model used for hairstyle analysis. |
+| REPORT_MODEL | Model used for generating professional barber guidance. |
+| PORT | Server listening port. Defaults to 3000. |
+
+For production deployment, configure these values using Render Environment Variables.
+
+Never commit `.env` files or API keys to GitHub.
+
+## Deployment on Render
+
+SnipMatch can be deployed as a single Node.js web service.
+
+Steps:
+
+1. Connect the GitHub repository to Render.
+
+2. Create a new Web Service.
+
+3. Configure:
+
+Build Command:
+
+```bash
+npm install
 
 ## API
 
-`POST /api/analyze`
+SnipMatch uses a small Express API layer to securely connect the frontend with AI-powered analysis.
 
-The browser corrects image orientation, limits the longest edge to 1280 pixels, preserves aspect ratio, and encodes both images as JPEG at a fixed quality before submission.
+### POST /api/analyze
 
-```json
-{
-  "currentImage": "data:image/jpeg;base64,...",
-  "referenceImage": "data:image/jpeg;base64,..."
-}
-```
+Main hairstyle comparison endpoint.
 
-A successful response contains four validated dimension objects, all eight spatial-zone objects, the Stage 2 professional report, display-only reference style metadata, cache status, and version metadata. User priorities are deliberately excluded from model requests and cache keys.
-`POST /api/generate-report`
+Input:
+- Current hairstyle image
+- Reference hairstyle image
 
-This optional endpoint receives only the Client Non-Negotiable and normalized reference image. It returns a professional barber translation and, when needed, a consultation note. The browser does not call it when the textarea is empty.
+The backend:
+- normalizes uploaded images
+- sends images to the AI analysis pipeline
+- validates the structured response
+- returns hairstyle comparison data to the frontend
 
-```json
-{
-  "nonNegotiable": "No skin fade. Keep my fringe below my eyebrows.",
-  "referenceImage": "data:image/jpeg;base64,..."
-}
-```
+The response includes:
 
-## Consistency Test
+- four hairstyle dimension analyses
+- confidence and supporting evidence
+- professional barber guidance
+- reference style metadata
 
-With the server running, execute repeated uncached analyses of the same pair:
+### POST /api/generate-report
 
-```powershell
-npm run test:consistency -- --current .\current.jpg --reference .\reference.jpg --runs 5 --url http://localhost:3000
-```
+Optional endpoint used when users provide personal haircut requirements.
 
-The test reports each dimension's values, mean, variance, standard deviation, minimum, maximum, and range.
+It converts user preferences into professional barber consultation language and identifies possible conflicts with the target hairstyle.
 
-## Deploy on Render
+All AI requests are handled server-side.
 
-1. Create a new Render Web Service​ from your GitHub repository.
-2. Add the following variables in the service's Environment​ settings:
-- OPENAI_API_KEY: Your OpenAI-compatible API key (e.g., sk-cr-xxxformat).
-- OPENAI_BASE_URL: https://api.crazyrouter.com/v1.
-- VISION_MODEL: gpt-5.6-sol.
-- REPORT_MODEL: gpt-5.6-luna.
-3. Keep the Build Command as npm installand the Start Command as npm start.
-4. Render will automatically build and deploy. Once live, click the generated link (e.g., https://snipmatch.onrender.com)
-5. Verify the homepage and complete a full analysis cycle via the public URL.
-6. Never commit your .envfile; production secrets must reside exclusively in Render's Environment Variables.
+## AI Output Consistency Validation
+
+One challenge with AI-powered visual analysis is that repeated requests can sometimes produce slightly different outputs.
+
+To improve reliability, SnipMatch separates AI observation from score calculation.
+
+The AI provides:
+- visual observations
+- dimension analysis
+- confidence levels
+
+The application calculates the final weighted Match Score using deterministic logic.
+
+SnipMatch includes a consistency validation script to measure repeated analyses of the same image pair.
+
+Example:
+
+```bash
+npm run test:consistency -- --current ./current.jpg --reference ./reference.jpg --runs 5 --url http://localhost:3000
 
 ## Privacy and Safety
 
-- SnipMatch compares hairstyle geometry; it does not rate attractiveness.
-- It does not provide virtual try-on, face synthesis, or image generation.
-- Uploaded images are sent only from the browser to the SnipMatch backend and then through CrazyRouter for the requested analysis.
-- Secrets, local caches, test photos, virtual environments, and model checkpoints are excluded from Git.
+SnipMatch focuses on hairstyle communication, not appearance evaluation.
+
+It does not:
+- rate attractiveness
+- judge beauty
+- perform face synthesis
+- generate virtual try-on images
+
+The product analyzes hairstyle characteristics to help users communicate preferences with barbers more clearly.
+
+Uploaded images are processed only for the requested hairstyle analysis.
+
+All API keys remain server-side and are excluded from Git.
+
+Sensitive files including:
+- .env files
+- local caches
+- test images
+- temporary files
+
+are excluded through Git configuration.
+
+## Future Improvements
+
+SnipMatch focuses on improving communication between customers and barbers. Future improvements will continue to make this communication more personalized, accurate, and useful.
+
+### More Personalized Hair Preferences
+
+Future versions could allow users to provide more detailed preferences before analysis, such as:
+
+- Which parts of their current hairstyle they want to keep
+- Which areas they want to change
+- Which hairstyle features from the reference image matter most
+
+This would allow SnipMatch to better understand individual goals instead of treating every hairstyle comparison the same way.
+
+### More Detailed Reference Analysis
+
+Future versions could allow users to highlight specific areas of the reference hairstyle they want to prioritize, such as:
+
+- fringe
+- sides
+- crown
+- neckline
+- texture on top
+
+This would help users communicate exactly which elements of a reference hairstyle are most important.
+
+### Expanding Hairstyle Knowledge
+
+Professional haircut terminology and styling knowledge are highly specialized.
+
+A future direction is building a richer hairstyle knowledge base by incorporating more professional barber knowledge, haircut terminology, and real-world consultation examples.
+
+The goal is not to define what makes a hairstyle "beautiful", but to help users and professionals communicate more precisely.
+
+### Better Real-World Robustness
+
+Future improvements could include:
+
+- better handling of different lighting conditions
+- more guidance for taking hairstyle photos
+- improved analysis across different hair types and styles
+- broader multilingual barber terminology support
+
+Ultimately, SnipMatch aims to become a communication layer between personal hairstyle preferences and professional haircut expertise.
 
 
 
