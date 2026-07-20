@@ -190,13 +190,17 @@ The application runs as a single Node.js + Express service:
 
 ```mermaid
 flowchart LR
-    A[User Browser] -->|Uploads photos| B[Express Backend]
-    B --> C[Image Processing]
-    C --> D[GPT-5.6 Vision Analysis]
-    D --> E[Structured Hairstyle Data]
-    E --> F[Barber Guidance]
-    E --> G[Weighted Match Score]
-    F --> H[Barber Brief PDF]
+    A[User Browser] --> B[SnipMatch Web App]
+    B --> C[Express Backend]
+    C --> D[Image Processing]
+    D --> E[GPT-5.6 Vision Analysis]
+    E --> F[Structured Hairstyle Data]
+    F --> G[Barber Guidance]
+    F --> H[Weighted Match Score]
+    G --> I[Barber Brief PDF]
+    H --> B
+```
+
 
 ### Data Flow
 
