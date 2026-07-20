@@ -27,15 +27,15 @@ The result is a structured web report with evidence, confidence, adjustable prio
 
 ## AI Features
 
-CrazyRouter's OpenAI-compatible gateway is used only by the Node.js backend to access vision-capable GPT models. It:
+SnipMatch employs a two-stage reasoning pipeline powered by **GPT-5.6** via a standardized OpenAI-compatible API endpoint. This architecture decouples the application from specific inference providers, ensuring high availability and flexibility.
 
-- Stage 1 uses GPT-5.6-sol vision to analyze the normalized current and reference hairstyle images across eight spatial hair zones;
-- Stage 1 returns strict structured scores, confidence, evidence, and spatial observations for Volume, Length, Texture, and Silhouette;
-- Stage 2 uses GPT-5.6-luna to turn only the validated observations into region-specific barber guidance under 13 anti-fabrication rules;
-- estimates a concise reference hairstyle name and confidence from the reference image alone; and
-- when supplied, translates a Client Non-Negotiable and checks it for conflicts with the reference hairstyle in a separate GPT-5.6-luna request.
+- **Stage 1 (Spatial Analysis):** **GPT-5.6-sol** analyzes normalized current and reference images across eight spatial hair zones. It returns strictly structured scores, confidence levels, and spatial evidence for Volume, Length, Texture, and Silhouette.
+- **Stage 2 (Professional Synthesis):** **GPT-5.6-luna** converts only the validated Stage 1 observations into region-specific barber guidance, operating under 13 strict anti-fabrication rules to prevent hallucinations.
+- **Style Identification:** Estimates a concise reference hairstyle name and confidence score directly from the reference image.
+- **Constraint Validation:** When supplied, a separate **GPT-5.6-luna** request translates "Client Non-Negotiable" preferences into professional terminology and checks for conflicts with the target style.
 
-The server validates Stage 1 JSON before Stage 2 can use it, then validates the professional report for banned filler, invented measurements, and unsupported tools or techniques. The browser calculates the final weighted Overall Match Rate deterministically. Changing priorities never makes another AI provider request. The optional non-negotiable is a communication overlay only and never enters feature extraction, caching, dimension scores, or the Overall Match Rate. The CrazyRouter API key and every AI request remain server-side.
+**Engineering Safeguards:**
+The server rigorously validates Stage 1 JSON before synthesis. The generated professional report is scanned for banned filler words, invented measurements, and unsupported techniques. The browser calculates the final weighted Overall Match Rate deterministically. Adjusting user priorities triggers a local recalculation rather than a new AI request, preserving rate limits and consistency. The optional non-negotiable serves purely as a communication overlay and is isolated from feature extraction, caching, and core scoring logic. All API keys and AI requests remain strictly server-side.
 
 ## Architecture
 
@@ -58,38 +58,19 @@ The project intentionally uses no frontend framework, build tool, database, Dock
 
 ## Local Setup
 
-Requirements:
-
-- Node.js 18 or newer
-- A CrazyRouter API key
-
-```powershell
-Copy-Item .env.example .env
-npm install
-npm start
-```
-
-Set your local `.env` values before starting:
-
-```dotenv
-CRAZYROUTER_API_KEY=your_key_here
-CRAZYROUTER_BASE_URL=https://crazyrouter.com/v1
-VISION_MODEL=gpt-5.6-sol
-REPORT_MODEL=gpt-5.6-luna
-PORT=3000
-```
-
-Open `http://localhost:3000`.
+Requirements:​ Node.js 18+ and an OpenAI-compatible API key (supports sk-cr-xxxformat keys from compatible inference providers). 
+Quick Start:​ Run Copy-Item .env.example .env, then npm install, and npm start. 
+Configuration:​ Populate .envwith OPENAI_API_KEY=your_key_here, OPENAI_BASE_URL=https://api.crazyrouter.com/v1, VISION_MODEL=gpt-5.6-sol, REPORT_MODEL=gpt-5.6-luna, and PORT=3000. 
+Note: This setup mirrors the production Render environment to eliminate environment-specific bugs, featuring fallback logic for seamless switching between inference backends. Launch http://localhost:3000 to access the local demo.
 
 ## Environment Variables
 
-| Variable | Required | Description |
-| --- | --- | --- |
-| `CRAZYROUTER_API_KEY` | Yes | Server-side CrazyRouter credential. Never expose it to browser code. |
-| `CRAZYROUTER_BASE_URL` | No | OpenAI-compatible endpoint. Defaults to `https://crazyrouter.com/v1`. |
-| `VISION_MODEL` | No | Stage 1 hair feature and reference-style model. Defaults to `gpt-5.6-sol`. |
-| `REPORT_MODEL` | No | Stage 2 professional-report and Non-Negotiable model. Defaults to `gpt-5.6-luna`. |
-| `PORT` | No | Listening port. Defaults to `3000`; Railway supplies this in production. |
+The following environment variables configure the backend. OPENAI_API_KEY​ is required; all others are optional and defaulted. 
+- OPENAI_API_KEY: Server-side API credential (accepts OpenAI or compatible keys such as sk-cr-xxx); never expose this to browser code. 
+- OPENAI_BASE_URL: OpenAI-compatible inference endpoint; defaults to https://api.crazyrouter.com/v1. 
+- VISION_MODEL: Stage 1 spatial hair analysis model; defaults to gpt-5.6-sol. 
+- REPORT_MODEL: Stage 2 professional report and constraint validation model; defaults to gpt-5.6-luna. 
+- PORT: Listening port for the HTTP server; defaults to 3000, though Render auto-injects this value in production environments.
 
 ## API
 
@@ -126,15 +107,18 @@ npm run test:consistency -- --current .\current.jpg --reference .\reference.jpg 
 
 The test reports each dimension's values, mean, variance, standard deviation, minimum, maximum, and range.
 
-## Deploy on Railway
+## Deploy on Render
 
-1. Create a Railway project from the public GitHub repository.
-2. Add `CRAZYROUTER_API_KEY`, `CRAZYROUTER_BASE_URL`, `VISION_MODEL`, and `REPORT_MODEL` in the service's **Variables** settings.
-3. Deploy the repository. Railway detects the Node.js start script automatically.
-4. In **Settings → Networking**, generate a Railway domain.
-5. Verify the homepage and one complete analysis through the public URL.
-
-Do not upload `.env`; Railway environment variables are the only place the production CrazyRouter key should be stored.
+1. Create a new Render Web Service​ from your GitHub repository.
+2. Add the following variables in the service's Environment​ settings:
+- OPENAI_API_KEY: Your OpenAI-compatible API key (e.g., sk-cr-xxxformat).
+- OPENAI_BASE_URL: https://api.crazyrouter.com/v1.
+- VISION_MODEL: gpt-5.6-sol.
+- REPORT_MODEL: gpt-5.6-luna.
+3. Keep the Build Command as npm installand the Start Command as npm start.
+4. Render will automatically build and deploy. Once live, click the generated link (e.g., https://snipmatch.onrender.com)
+5. Verify the homepage and complete a full analysis cycle via the public URL.
+6. Never commit your .envfile; production secrets must reside exclusively in Render's Environment Variables.
 
 ## Privacy and Safety
 
