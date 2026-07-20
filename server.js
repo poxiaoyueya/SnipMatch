@@ -5,20 +5,20 @@ const http = require('node:http');
 const fs = require('node:fs');
 const path = require('node:path');
 
-const PORT = Number(process.env.PORT || 3000);
-const BASE_URL = (process.env.CRAZYROUTER_BASE_URL || 'https://crazyrouter.com/v1').replace(/\/$/, '');
+const PORT = Number(process.env.PORT || 3001);
+const BASE_URL = 'https://api.crazyrouter.com/v1';
 const VISION_MODEL = process.env.VISION_MODEL || 'gpt-5.6-sol';
 const REPORT_MODEL = process.env.REPORT_MODEL || 'gpt-5.6-luna';
-const API_KEY = process.env.CRAZYROUTER_API_KEY;
+const API_KEY = process.env.OPENAI_API_KEY;
 
 if (!API_KEY || !API_KEY.startsWith('sk-')) {
-  console.error('[fatal] CRAZYROUTER_API_KEY is missing or invalid. Add a valid sk- key to .env.');
+  console.error('[fatal] OPENAI_API_KEY is missing or invalid. Add a valid CrazyRouter sk- key to the environment.');
   process.exit(1);
 }
 
 if (process.env.NODE_ENV !== 'production') {
   // Temporary local-only diagnostic. Never log the complete API key.
-  console.log(`[startup] CRAZYROUTER_API_KEY loaded: ${API_KEY.slice(0, 7)}...`);
+  console.log(`[startup] OPENAI_API_KEY loaded: ${API_KEY.slice(0, 7)}...`);
 }
 
 const PROMPT_VERSION = 'hair-features-v2-eight-zones';
@@ -593,6 +593,7 @@ function serveStatic(res, fileName) {
 
 const server = http.createServer(async (req, res) => {
   try {
+    if (req.method === 'GET' && req.url === '/health') return json(res, 200, { status: 'ok' });
     if (req.method === 'GET' && (req.url === '/' || req.url === '/index.html')) return serveStatic(res, 'index.html');
     if (req.method === 'GET' && req.url === '/styles.css') return serveStatic(res, 'styles.css');
     if (req.method === 'GET' && req.url === '/script.js') return serveStatic(res, 'script.js');
