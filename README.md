@@ -29,11 +29,11 @@ The result is a structured web report with evidence, confidence, adjustable prio
 
 CrazyRouter's OpenAI-compatible gateway is used only by the Node.js backend to access vision-capable GPT models. It:
 
-- Stage 1 uses GPT-4o vision to analyze the normalized current and reference hairstyle images across eight spatial hair zones;
+- Stage 1 uses GPT-5.6-sol vision to analyze the normalized current and reference hairstyle images across eight spatial hair zones;
 - Stage 1 returns strict structured scores, confidence, evidence, and spatial observations for Volume, Length, Texture, and Silhouette;
-- Stage 2 uses GPT-4o to turn only the validated observations into region-specific barber guidance under 13 anti-fabrication rules;
+- Stage 2 uses GPT-5.6-luna to turn only the validated observations into region-specific barber guidance under 13 anti-fabrication rules;
 - estimates a concise reference hairstyle name and confidence from the reference image alone; and
-- when supplied, translates a Client Non-Negotiable and checks it for conflicts with the reference hairstyle in a separate GPT-4o request.
+- when supplied, translates a Client Non-Negotiable and checks it for conflicts with the reference hairstyle in a separate GPT-5.6-luna request.
 
 The server validates Stage 1 JSON before Stage 2 can use it, then validates the professional report for banned filler, invented measurements, and unsupported tools or techniques. The browser calculates the final weighted Overall Match Rate deterministically. Changing priorities never makes another AI provider request. The optional non-negotiable is a communication overlay only and never enters feature extraction, caching, dimension scores, or the Overall Match Rate. The CrazyRouter API key and every AI request remain server-side.
 
@@ -44,9 +44,9 @@ flowchart LR
     A[User Browser] --> B[Node.js Server]
     B --> C[Static HTML, CSS, and JavaScript]
     A -->|Two normalized hairstyle images| D[POST /api/analyze]
-    D --> E[Stage 1: GPT-4o eight-zone extraction]
+    D --> E[Stage 1: GPT-5.6-sol eight-zone extraction]
     E --> H[Validated feature cache]
-    H --> R[Stage 2: GPT-4o barber-safe report]
+    H --> R[Stage 2: GPT-5.6-luna barber-safe report]
     R --> J[Validated report cache]
     J --> D
     D --> A
