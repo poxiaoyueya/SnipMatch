@@ -2,7 +2,7 @@
 
 AI-powered hairstyle comparison that helps people communicate better with their barbers.
 
-SnipMatch compares a user's current hairstyle with a reference hairstyle, identifies the key differences, and transforms them into clear, professional, barber-ready instructions.
+I built SnipMatch to solve a simple communication problem: people often bring hairstyle reference photos to barbers, but photos alone cannot explain the technical details behind the style. SnipMatch compares a user's current hairstyle with a reference hairstyle, identifies the key differences, and transforms them into clear, professional, barber-ready instructions.
 
 Instead of judging appearance or defining what looks "better", SnipMatch focuses on one goal: helping users explain the haircut they want.
 
@@ -12,9 +12,9 @@ Live Demo: https://snipmatch.onrender.com/
 
 ## Project Overview
 
-A reference photo can show the hairstyle someone wants, but it rarely explains what needs to change from their current haircut.
+A reference photo can show the hairstyle someone wants, but it rarely explains what needs to change from their current haircut. 
 
-This creates a communication gap between customers and barbers. Users often know the result they want, but they struggle to describe the technical details behind that style.
+This creates a communication gap between customers and barbers. Users often know the result they want, but they struggle to describe the technical details behind that style. This happens a lot when I go the barber shop.
 
 SnipMatch creates a shared language between customers and barbers by analyzing hairstyle differences across four observable dimensions:
 - Volume
@@ -30,7 +30,7 @@ Users can also generate a Barber Brief PDF to bring directly to their appointmen
 
 ### AI Hairstyle Comparison
 
-Upload your current hairstyle photo and a reference hairstyle photo. SnipMatch analyzes the differences between the two hairstyles using four key dimensions:
+Upload your current hairstyle photo and a reference hairstyle photo. It's very simple! SnipMatch analyzes the differences between the two hairstyles using four key dimensions:
 - Volume
 - Length
 - Texture
@@ -42,7 +42,7 @@ Instead of providing a single black-box similarity score, SnipMatch generates st
 
 ### Personalized Match Score
 
-Users can adjust the importance of each dimension based on their personal preferences.
+Users can adjust the importance of each dimension based on their personal preferences. It's really fantastic!
 
 For example:
 - Someone growing out their hair can prioritize Length.
@@ -78,7 +78,7 @@ Input images are normalized and analysis results are cached to improve consisten
 
 ## AI Features
 
-SnipMatch uses GPT-5.6-powered vision capabilities to transform hairstyle images into structured, explainable haircut guidance.
+SnipMatch uses GPT-5.6-powered vision capabilities to transform hairstyle images into structured, explainable haircut guidance. GPT-5.6 is far more powerful than I expected!
 
 The AI workflow is designed around two stages:
 
@@ -153,12 +153,16 @@ Codex helped build and refine the Node.js + Express backend, including:
 
 ### AI Workflow Design
 
-Codex helped iterate on the AI analysis pipeline, including:
+Codex helped iterate on the AI analysis pipeline, which I'm really appreciated of it, including:
 
 - designing structured hairstyle analysis outputs
 - improving prompt reliability
 - separating AI interpretation from deterministic application logic
 - reducing inconsistent AI-generated scoring
+
+During early exploration, I considered building a virtual hairstyle try-on experience that would combine a user's face with a reference hairstyle image.
+However, this direction introduced challenges around generating or modifying a person's appearance. I decided to move away from image generation and focus on a safer and more practical problem: helping users communicate hairstyle preferences with barbers.
+
 
 ### Debugging and Testing
 
@@ -319,7 +323,7 @@ All AI requests are handled server-side.
 
 ## AI Output Consistency Validation
 
-One challenge with AI-powered visual analysis is that repeated requests can sometimes produce slightly different outputs.
+One major challenge was AI output consistency. When testing the same pair of hairstyle images multiple times, the AI could produce slightly different similarity scores. A single AI-generated "match rate" was not reliable enough for a user-facing product.
 
 To improve reliability, SnipMatch separates AI observation from score calculation.
 
@@ -365,7 +369,7 @@ are excluded through Git configuration.
 
 ## Future Improvements
 
-SnipMatch focuses on improving communication between customers and barbers. Future improvements will continue to make this communication more personalized, accurate, and useful.
+SnipMatch focuses on improving communication between customers and barbers. Future improvements will continue to make this communication more personalized, accurate, and useful. I will update new features as long as I have time. 
 
 ### More Personalized Hair Preferences
 
@@ -375,7 +379,7 @@ Future versions could allow users to provide more detailed preferences before an
 - Which areas they want to change
 - Which hairstyle features from the reference image matter most
 
-This would allow SnipMatch to better understand individual goals instead of treating every hairstyle comparison the same way.
+This would allow SnipMatch to better understand individual goals instead of treating every hairstyle comparison the same way. I think this could be the most amazing feature, but I don't have enough time to finish for this time. 
 
 ### More Detailed Reference Analysis
 
@@ -387,11 +391,11 @@ Future versions could allow users to highlight specific areas of the reference h
 - neckline
 - texture on top
 
-This would help users communicate exactly which elements of a reference hairstyle are most important.
+This would help users communicate exactly which elements of a reference hairstyle are most important. 
 
 ### Expanding Hairstyle Knowledge
 
-Professional haircut terminology and styling knowledge are highly specialized.
+Professional haircut terminology and styling knowledge are highly specialized. This is the part that I still need to improve, because I'm not a barber obviously. I will find some barbers to consult in future. 
 
 A future direction is building a richer hairstyle knowledge base by incorporating more professional barber knowledge, haircut terminology, and real-world consultation examples.
 
@@ -399,14 +403,14 @@ The goal is not to define what makes a hairstyle "beautiful", but to help users 
 
 ### Better Real-World Robustness
 
-Future improvements could include:
+Future improvements could include, please keep looking forward to: 
 
 - better handling of different lighting conditions
 - more guidance for taking hairstyle photos
 - improved analysis across different hair types and styles
 - broader multilingual barber terminology support
 
-Ultimately, SnipMatch aims to become a communication layer between personal hairstyle preferences and professional haircut expertise.
+Ultimately, SnipMatch aims to become a communication layer between personal hairstyle preferences and professional haircut expertise. I hope there will be users who love it!
 
 
 
