@@ -241,6 +241,10 @@ Clone the repository:
 ```bash
 git clone https://github.com/your-username/SnipMatch.git
 cd SnipMatch
+npm install
+cp .env.example .env
+npm start
+```
 
 ## Environment Variables
 
@@ -274,6 +278,7 @@ Build Command:
 
 ```bash
 npm install
+```
 
 ## API
 
@@ -327,6 +332,8 @@ Example:
 
 ```bash
 npm run test:consistency -- --current ./current.jpg --reference ./reference.jpg --runs 5 --url http://localhost:3000
+```
+
 
 ## Privacy and Safety
 
