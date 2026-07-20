@@ -232,17 +232,21 @@ This architecture separates AI interpretation from application logic, allowing f
 ### Requirements
 
 - Node.js 18+
-- An OpenAI-compatible API key
+- An API key configured through environment variables
 
 ### Installation
 
 Clone the repository:
 
 ```bash
-git clone https://github.com/your-username/SnipMatch.git
+git clone https://github.com/poxiaoyueya/SnipMatch.git
+
 cd SnipMatch
+
 npm install
+
 cp .env.example .env
+
 npm start
 ```
 
