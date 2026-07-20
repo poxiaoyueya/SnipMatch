@@ -1,0 +1,17 @@
+{
+    "name": "snipmatch",
+    "private": true,
+    "version": "0.1.0",
+    "scripts": {
+        "start": "node server.js",
+        "dev": "node server.js",
+        "test:consistency": "node scripts/consistency-test.js",
+        "test:pipeline": "node scripts/pipeline-contract-test.js"
+    },
+    "engines": {
+        "node": ">=18"
+    },
+    "dependencies": {
+        "dotenv": "^17.4.2"
+    }
+}

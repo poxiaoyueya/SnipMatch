@@ -1,0 +1,136 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>SnipMatch</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono&family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main>
+    <nav class="nav">
+      <a class="brand" href="#"><span class="brand-mark">S</span>Snip<span>Match</span></a>
+      <div class="nav-links"><a href="#how-it-works">How it works</a></div>
+    </nav>
+
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow"><i></i>THE HAIRCUT, TRANSLATED</p>
+        <h1>Never leave your<br>haircut to <em>guesswork.</em></h1>
+        <p class="intro">Turn an inspiration photo into a stylist-ready brief, tailored to your CURRENT uploaded haircut and real life.</p>
+        <a class="cta" href="#create"><span>Build my hair brief</span><b>&rarr;</b></a>
+        <div class="trust"><div class="avatars"><span>J</span><span>K</span><span>M</span></div><p><strong>24,000+</strong> better salon conversations</p></div>
+      </div>
+      <div class="hero-visual">
+        <div class="sun"></div>
+        <div class="portrait-frame"><img src="https://images.unsplash.com/photo-1519699047748-de8e457a634e?auto=format&fit=crop&w=1000&q=85" alt="Haircut inspiration"><div class="portrait-caption"><span>YOUR BEST LOOK</span><b>A better brief for your barber.</b></div></div>
+      </div>
+    </section>
+
+    <section class="builder" id="create">
+      <div class="section-head">
+        <p class="eyebrow"><i></i>YOUR STYLE SESSION</p>
+        <h2>Let&apos;s make it <em>specific.</em></h2>
+        <p>Two photos are all it takes to start a better conversation. (Please provide a front-facing headshot with a clean background)</p>
+      </div>
+      <div class="upload-grid">
+        <label class="upload-card" id="yourCard" for="yourPhoto">
+          <input id="yourPhoto" type="file" accept="image/*">
+          <img class="upload-preview" id="yourPreview" alt="Selected hair study" hidden>
+          <div class="upload-icon">UP</div><h3>Your photo</h3><p>Hair visible, natural light</p><small>JPG, PNG up to 10MB</small>
+        </label>
+        <div class="upload-divider"><span>+</span><p>paired with</p></div>
+        <label class="upload-card reference" id="referenceCard" for="inspirationPhoto">
+          <input id="inspirationPhoto" type="file" accept="image/*">
+          <img class="upload-preview" id="inspirationPreview" alt="Selected reference hairstyle" hidden>
+          <div class="upload-icon">IN</div><h3>Inspiration photo</h3><p>The cut you love</p><small>JPG, PNG up to 10MB</small>
+        </label>
+      </div>
+      <details class="priority-panel upload-priority hidden" id="priorityPanel" open>
+        <summary>Define Your Target Look <span>+</span></summary>
+        <p>Set how closely you want each dimension of YOUR CURRENT HAIRCUT to match the reference style. Total must equal 100%.</p>
+        <div class="priority-sliders">
+          <label><span>Volume <span class="info-icon" title="Fullness and density." aria-label="Fullness and density.">ℹ️</span></span><output id="volumeWeight">25%</output><input data-dimension="volume" type="range" min="0" max="100" value="25"><small class="slider-help">How closely should your CURRENT HAIR&apos;S fullness match the reference?</small></label>
+          <label><span>Length <span class="info-icon" title="Measurable length of sections." aria-label="Measurable length of sections.">ℹ️</span></span><output id="lengthWeight">25%</output><input data-dimension="length" type="range" min="0" max="100" value="25"><small class="slider-help">How closely should your CURRENT HAIR&apos;S length match the reference?</small></label>
+          <label><span>Texture <span class="info-icon" title="Curl pattern and surface definition." aria-label="Curl pattern and surface definition.">ℹ️</span></span><output id="textureWeight">25%</output><input data-dimension="texture" type="range" min="0" max="100" value="25"><small class="slider-help">How closely should your CURRENT HAIR&apos;S texture match the reference?</small></label>
+          <label><span>Silhouette <span class="info-icon" title="Outer shape and neckline." aria-label="Outer shape and neckline.">ℹ️</span></span><output id="silhouetteWeight">25%</output><input data-dimension="silhouette" type="range" min="0" max="100" value="25"><small class="slider-help">How closely should your CURRENT HAIR&apos;S shape match the reference?</small></label>
+        </div>
+        <p class="priority-total" id="priorityTotal">Total priority: 100%</p>
+        <p class="priority-error hidden" id="priorityError" role="alert">Total priority must equal 100%</p>
+      </details>
+      <div class="non-negotiable-field">
+        <label for="nonNegotiable">What must your barber avoid?</label>
+        <textarea id="nonNegotiable" maxlength="200" placeholder="Add one short, specific non-negotiable. Example: &quot;No skin fade. Keep my fringe below my eyebrows.&quot;"></textarea>
+        <small>This will appear as a "Client Non-Negotiable" in your report.</small>
+      </div>
+      <button class="analyze" id="analyzeBtn" disabled><span>Generate Report</span><b>&rarr;</b></button>
+      <p class="privacy">Your photos are private and never used to train our models.</p>
+    </section>
+
+    <section class="results hidden" id="results">
+      <div class="result-title">
+        <p class="eyebrow"><i></i>YOUR CONSULTATION</p>
+        <h2>Hairstyle <em>Brief Report.</em></h2>
+        <p>Clear, actionable haircut guidance to bring to your barber.</p>
+      </div>
+
+      <article class="report match-report" id="stylist-report">
+        <div class="report-top"><span>SNIPMATCH</span></div>
+        <h3>Hairstyle Brief Report</h3>
+        <p class="report-intro">This is your consultation summary. Download the Barber Brief PDF for appointment-ready technical instructions.</p>
+        <section class="client-non-negotiable hidden" id="nonNegotiableReport">
+          <h4>⛔ CLIENT NON-NEGOTIABLE — CONFIRM BEFORE CUTTING</h4>
+          <p><strong>Client's Request:</strong> <em id="nonNegotiableRequest"></em></p>
+          <p><strong>Barber's Instruction:</strong> <em id="nonNegotiableInstruction"></em></p>
+          <p class="consultation-note hidden" id="nonNegotiableConsultation"><strong>⚠️ Consultation Note:</strong> <span id="nonNegotiableNote"></span></p>
+        </section>
+        <div class="match-row">
+          <div class="score-copy"><small>OVERALL MATCH RATE</small><strong><span id="scoreText">--</span></strong><p class="score-tier" id="scoreTier">Awaiting analysis</p><p class="score-tier-sub" id="scoreTierSub">Your match details will appear here.</p><p class="score-support">Calculated based on your priorities.</p><p class="score-support" id="priorityRanking">Priority ranking: Volume 25% · Length 25% · Silhouette 25% · Texture 25%</p><p class="score-description">Based on your targets above. Higher means your CURRENT haircut is closer to the reference style.</p></div><div class="overall-rate-visual"><small>OVERALL MATCH RATE</small><div class="match-circle"><span id="overallMatchRate">--</span></div></div>
+        </div>        <section class="dimension-analysis" aria-labelledby="dimensionAnalysisTitle">
+          <h4 id="dimensionAnalysisTitle">Dimension Analysis</h4>
+          <p class="dimension-subtitle">Side-by-side comparison of your CURRENT HAIRCUT against the reference style across four core dimensions.</p>
+          <table>
+            <thead><tr><th>Dimension</th><th>Match Rate</th><th>Evidence &amp; observations</th></tr></thead>
+            <tbody id="dimensionRows"><tr><td colspan="3">Your analysis will appear here.</td></tr></tbody>
+          </table>
+        </section>
+        <div class="reference-style"><small>REFERENCE STYLE</small><b id="referenceStyle">Waiting for analysis</b><span class="reference-style-caption" id="referenceStyleCaption">AI-estimated style name</span></div>
+        <div class="ask"><small>WHAT TO ASK YOUR BARBER</small><ul id="barberRequests"><li>Your barber-ready requests will appear here.</li></ul></div>
+        <div class="report-actions"><button class="download-brief" id="pdfBtn">Download SnipMatch Brief (PDF)</button><button class="reset-data" id="resetBtn">Clear Data &amp; Start Over</button></div>
+      </article>
+    </section>
+    <section class="how" id="how-it-works">
+      <p class="eyebrow"><i></i>HOW IT WORKS</p>
+      <div class="how-grid">
+        <h2>From &quot;kind of like this&quot;<br>to <em>exactly this.</em></h2>
+        <div><span>01</span><h3>Show us your CURRENT uploaded haircut</h3><p>We assess length, density, texture, and silhouette.</p></div>
+        <div><span>02</span><h3>Show us the dream</h3><p>We compare the reference cut with your CURRENT uploaded haircut.</p></div>
+        <div><span>03</span><h3>Walk in prepared</h3><p>Bring a clear barber brief to your appointment.</p></div>
+      </div>
+    </section>
+  </main>
+  <footer><a class="brand" href="#"><span class="brand-mark">S</span>Snip<span>Match</span></a><p>Better words. Better hair days.</p><span>(c) 2026 SNIPMATCH</span></footer>
+  <div class="toast" id="toast">Your report is ready.</div>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
